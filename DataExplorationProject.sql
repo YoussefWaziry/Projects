@@ -22,7 +22,7 @@ order by 1,2
 -- Total Cases vs Total Deaths
 -- Shows likelihood of dying if you contract covid in your country
 
-Select Location, date, total_cases_per_million,total_deaths_per_million, (total_deaths_per_million/total_cases_per_million)*100 as DeathPercentage
+Select Location, date, total_cases_per_million,total_deaths_per_million, (total_deaths_per_million/total_cases_per_million)*100 DeathPercentage
 From DataExploration..CovidDeaths
 Where location like '%Egypt%'
 and continent is not null 
@@ -39,7 +39,7 @@ order by 1,2
 
 -- Countries with Highest Infection Rate compared to Population
 
-Select Location, Population, MAX(total_cases_per_million) as HighestInfectionCount,  Max((total_cases_per_million/population))*100 as PercentPopulationInfected
+Select Location, Population, MAX(total_cases_per_million) as HighestInfectionCount,  Max((total_cases_per_million/population))*100 PercentPopulationInfected
 From DataExploration..CovidDeaths
 Group by Location, Population
 order by PercentPopulationInfected desc
@@ -47,7 +47,7 @@ order by PercentPopulationInfected desc
 
 -- Countries with Highest Death Count per Population
 
-Select Location, MAX(cast(Total_deaths as int)) as TotalDeathCount
+Select Location, MAX(cast(Total_deaths as int)) TotalDeathCount
 From DataExploration..CovidDeaths
 Where continent is not null 
 Group by Location
@@ -118,7 +118,7 @@ RollingPeopleVaccinated numeric
 
 Insert into #PercentPopulationVaccinated
 Select dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
-, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) as RollingPeopleVaccinated
+, SUM(CONVERT(int,vac.new_vaccinations)) OVER (Partition by dea.Location Order by dea.location, dea.Date) RollingPeopleVaccinated
 From DataExploration..CovidDeaths dea
 Join DataExploration..CovidVaccinations vac
 	On dea.location = vac.location
